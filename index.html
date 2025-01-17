@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ماين سكنز - استكشف أفضل السكنات</title>
+    <link rel="stylesheet" href="namemc_clone.css">
+</head>
+<body>
+
+<!-- قائمة التنقل -->
+<nav class="navbar">
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <ul class="nav-links" id="navMenu">
+        <li><a href="#best-skins">أفضل السكنات</a></li>
+        <li><a href="#all-skins">كل السكنات</a></li>
+        <li><a href="#upload-skin">رفع السكن</a></li>
+        <li><a href="#search-skins">بحث عن اللاعبين</a></li>
+    </ul>
+</nav>
+
+<header>
+    <h1>مرحبًا بك في ماين سكنز</h1>
+    <p>اكتشف أفضل السكنات وشارك سكناتك مع الآخرين!</p>
+    <div class="search-bar">
+        <input type="text" id="playerName" placeholder="أدخل اسم اللاعب (Java أو Bedrock)">
+        <button onclick="searchSkins()">بحث</button>
+    </div>
+</header>
+
+<div class="container">
+    <!-- أفضل السكنات -->
+    <section id="best-skins" class="best-skins-section">
+        <h2>أفضل السكنات</h2>
+        <div class="skin-grid" id="bestSkinGrid">
+            <!-- سيتم عرض السكنات المميزة هنا -->
+        </div>
+    </section>
+
+    <!-- كل السكنات -->
+    <section id="all-skins" class="all-skins-section">
+        <h2>كل السكنات</h2>
+        <div class="skin-grid" id="allSkinGrid">
+            <!-- سيتم تحميل السكنات الديناميكية هنا -->
+        </div>
+    </section>
+
+    <!-- رفع السكن -->
+    <section id="upload-skin" class="upload-section">
+        <h2>رفع السكن</h2>
+        <form id="skinUploadForm" enctype="multipart/form-data">
+            <label for="skinFile">اختر ملف السكن:</label>
+            <input type="file" id="skinFile" accept=".png">
+            <button type="button" onclick="uploadSkin()">رفع السكن</button>
+        </form>
+        <p id="uploadStatus"></p>
+    </section>
+
+    <!-- البحث عن اللاعبين -->
+    <section id="search-skins" class="search-skins-section">
+        <h2>بحث عن اللاعبين</h2>
+        <div id="playerResults" class="player-grid">
+            <!-- سيتم عرض نتائج البحث هنا -->
+        </div>
+    </section>
+</div>
+
+<footer>
+    <p>© 2025 ماين سكنز. جميع الحقوق محفوظة.</p>
+</footer>
+
+<script src="app.js"></script>
+
+</body>
+</html>c="" alt="التوتم" style="max-width: 100%; height: auto;">
+            <a id="downloadTotem" href="#" download>تحميل التوتم</a>
+            <p>مؤشر الفأرة:</p>
+            <img id="cursorImage" src="" alt="الفأرة" style="max-width: 100%; height: auto;">
+            <a id="downloadCursor" href="#" download>تحميل الفأرة</a>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <p>© 2025 ماين سكنز. جميع الحقوق محفوظة.</p>
+</footer>
+
+<script>
+    function toggleMenu() {
+        const navMenu = document.getElementById('navMenu');
+        navMenu.style.display = navMenu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function processSkin() {
+        const skinFile = document.getElementById('skinFile').files[0];
+        if (!skinFile) {
+            alert("يرجى اختيار ملف السكن.");
+            return;
+        }
+
+        const outputSection = document.getElementById('outputSection');
+        const totemImage = document.getElementById('totemImage');
+        const cursorImage = document.getElementById('cursorImage');
+        const downloadTotem = document.getElementById('downloadTotem');
+        const downloadCursor = document.getElementById('downloadCursor');
+
+        // Placeholder for processed images
+        totemImage.src = "https://example.com/totem_example.png";
+        cursorImage.src = "https://example.com/cursor_example.png";
+        downloadTotem.href = totemImage.src;
+        downloadCursor.href = cursorImage.src;
+
+        outputSection.style.display = "block";
+    }
+</script>
+
+</body>
+</html>
