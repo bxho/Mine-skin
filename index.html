@@ -3,117 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ماين سكنز - استكشف أفضل السكنات</title>
-    <link rel="stylesheet" href="namemc_clone.css">
+    <title>سكناتي - دعم Bedrock و Java</title>
+    <script src="https://unpkg.com/skinview3d@1.7.0"></script> <!-- مكتبة SkinView3D -->
+    <style>
+        :root {
+            --main-bg: #1e1e2f;
+            --secondary-bg: #28293d;
+            --accent-color: #0ff;
+            --text-light: #fff;
+            --btn-hover: #0cc;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: var(--main-bg);
+            color: var(--text-light);
+        }
+        .navbar {
+            background-color: var(--secondary-bg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+        .navbar h1 {
+            color: var(--accent-color);
+        }
+        .navbar .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .navbar .nav-links a:hover {
+            color: var(--accent-color);
+        }
+        .hero-section {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .hero-section h2 {
+            font-size: 2.5rem;
+        }
+        .skin-viewer {
+            margin: 20px auto;
+            width: 300px;
+            height: 400px;
+            background: #f3f3f3;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+            display: none; /* مخفي افتراضياً */
+        }
+        .button-container button {
+            margin: 5px;
+            padding: 10px 15px;
+            background-color: var(--accent-color);
+            color: var(--main-bg);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button-container button:hover {
+            background-color: var(--btn-hover);
+        }
+        footer {
+            background-color: var(--secondary-bg);
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            color: var(--text-light);
+        }
+    </style>
 </head>
 <body>
+    <header class="navbar">
+        <h1>سكناتي</h1>
+        <nav class="nav-links">
+            <a href="#import">استيراد السكنات</a>
+            <a href="#upload">رفع السكن</a>
+        </nav>
+    </header>
 
-<!-- قائمة التنقل -->
-<nav class="navbar">
-    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
-    <ul class="nav-links" id="navMenu">
-        <li><a href="#best-skins">أفضل السكنات</a></li>
-        <li><a href="#all-skins">كل السكنات</a></li>
-        <li><a href="#upload-skin">رفع السكن</a></li>
-        <li><a href="#search-skins">بحث عن اللاعبين</a></li>
-    </ul>
-</nav>
+    <main>
+        <section id="import" class="hero-section">
+            <h2>استيراد السكنات</h2>
+            <p>اختر الإصدار وأدخل اسم اللاعب للحصول على السكن الخاص به:</p>
+            <form id="fetchSkinForm">
+                <select id="gameEdition" required>
+                    <option value="java">Java Edition</option>
+                    <option value="bedrock">Bedrock Edition</option>
+                </select>
+                <input type="text" id="playerName" placeholder="أدخل اسم اللاعب" required>
+                <button type="submit">استيراد</button>
+            </form>
+            <div id="playerSkin" class="skin-viewer"></div>
+            <div class="button-container" id="actionButtons">
+                <button id="rotateSkin">تحريك 360 درجة</button>
+                <button id="downloadSkin">تحميل السكن</button>
+                <button id="convertTotem">تحويل إلى توتم</button>
+            </div>
+        </section>
+    </main>
 
-<header>
-    <h1>مرحبًا بك في ماين سكنز</h1>
-    <p>اكتشف أفضل السكنات وشارك سكناتك مع الآخرين!</p>
-    <div class="search-bar">
-        <input type="text" id="playerName" placeholder="أدخل اسم اللاعب (Java أو Bedrock)">
-        <button onclick="searchSkins()">بحث</button>
-    </div>
-</header>
+    <footer>
+        <p>© 2025 سكناتي | جميع الحقوق محفوظة.</p>
+    </footer>
 
-<div class="container">
-    <!-- أفضل السكنات -->
-    <section id="best-skins" class="best-skins-section">
-        <h2>أفضل السكنات</h2>
-        <div class="skin-grid" id="bestSkinGrid">
-            <!-- سيتم عرض السكنات المميزة هنا -->
-        </div>
-    </section>
+    <script>
+        let skinViewer;
 
-    <!-- كل السكنات -->
-    <section id="all-skins" class="all-skins-section">
-        <h2>كل السكنات</h2>
-        <div class="skin-grid" id="allSkinGrid">
-            <!-- سيتم تحميل السكنات الديناميكية هنا -->
-        </div>
-    </section>
+        // استيراد السكنات
+        document.getElementById('fetchSkinForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const playerName = document.getElementById('playerName').value.trim();
+            const gameEdition = document.getElementById('gameEdition').value;
+            const viewerContainer = document.getElementById('playerSkin');
+            const actionButtons = document.getElementById('actionButtons');
 
-    <!-- رفع السكن -->
-    <section id="upload-skin" class="upload-section">
-        <h2>رفع السكن</h2>
-        <form id="skinUploadForm" enctype="multipart/form-data">
-            <label for="skinFile">اختر ملف السكن:</label>
-            <input type="file" id="skinFile" accept=".png">
-            <button type="button" onclick="uploadSkin()">رفع السكن</button>
-        </form>
-        <p id="uploadStatus"></p>
-    </section>
+            if (!playerName) {
+                alert('يرجى إدخال اسم اللاعب.');
+                return;
+            }
 
-    <!-- البحث عن اللاعبين -->
-    <section id="search-skins" class="search-skins-section">
-        <h2>بحث عن اللاعبين</h2>
-        <div id="playerResults" class="player-grid">
-            <!-- سيتم عرض نتائج البحث هنا -->
-        </div>
-    </section>
-</div>
+            try {
+                let skinUrl;
+                if (gameEdition === 'java') {
+                    const response = await fetch(`https://api.mojang.com/users/profiles/minecraft/${playerName}`);
+                    if (!response.ok) throw new Error('اسم اللاعب غير صحيح.');
+                    const data = await response.json();
+                    const uuid = data.id;
+                    skinUrl = `https://crafatar.com/skins/${uuid}`;
+                } else if (gameEdition === 'bedrock') {
+                    const bedrockSkins = {
+                        "steve": "https://minecraftskins.com/uploads/skins/steve.png",
+                        "alex": "https://minecraftskins.com/uploads/skins/alex.png"
+                    };
+                    skinUrl = bedrockSkins[playerName.toLowerCase()];
+                    if (!skinUrl) throw new Error('السكن غير متوفر.');
+                }
 
-<footer>
-    <p>© 2025 ماين سكنز. جميع الحقوق محفوظة.</p>
-</footer>
+                // عرض السكن
+                viewerContainer.innerHTML = '';
+                skinViewer = new skinview3d.SkinViewer({
+                    canvas: viewerContainer.appendChild(document.createElement('canvas')),
+                    width: 300,
+                    height: 400,
+                    skin: skinUrl
+                });
 
-<script src="app.js"></script>
+                // إظهار الأزرار
+                actionButtons.style.display = 'block';
+            } catch (error) {
+                alert(`خطأ: ${error.message}`);
+                actionButtons.style.display = 'none';
+            }
+        });
 
-</body>
-</html>c="" alt="التوتم" style="max-width: 100%; height: auto;">
-            <a id="downloadTotem" href="#" download>تحميل التوتم</a>
-            <p>مؤشر الفأرة:</p>
-            <img id="cursorImage" src="" alt="الفأرة" style="max-width: 100%; height: auto;">
-            <a id="downloadCursor" href="#" download>تحميل الفأرة</a>
-        </div>
-    </div>
+        // تحريك السكن
+        document.getElementById('rotateSkin').addEventListener('click', () => {
+            if (skinViewer) {
+                skinViewer.controls.enableRotate = !skinViewer.controls.enableRotate;
+                alert(skinViewer.controls.enableRotate ? "تم تفعيل التحريك." : "تم إيقاف التحريك.");
+            }
+        });
 
-</div>
+        // تحميل السكن
+        document.getElementById('downloadSkin').addEventListener('click', () => {
+            if (skinViewer) {
+                const a = document.createElement('a');
+                a.href = skinViewer.skin;
+                a.download = 'player_skin.png';
+                a.click();
+            } else {
+                alert('يرجى استيراد السكن أولاً.');
+            }
+        });
 
-<footer>
-    <p>© 2025 ماين سكنز. جميع الحقوق محفوظة.</p>
-</footer>
+        // تحويل السكن إلى توتم
+        document.getElementById('convertTotem').addEventListener('click', () => {
+            if (!skinViewer) {
+                alert('يرجى استيراد السكن أولاً.');
+                return;
+            }
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 120;
+            canvas.height = 120;
 
-<script>
-    function toggleMenu() {
-        const navMenu = document.getElementById('navMenu');
-        navMenu.style.display = navMenu.style.display === 'block' ? 'none' : 'block';
-    }
-
-    function processSkin() {
-        const skinFile = document.getElementById('skinFile').files[0];
-        if (!skinFile) {
-            alert("يرجى اختيار ملف السكن.");
-            return;
-        }
-
-        const outputSection = document.getElementById('outputSection');
-        const totemImage = document.getElementById('totemImage');
-        const cursorImage = document.getElementById('cursorImage');
-        const downloadTotem = document.getElementById('downloadTotem');
-        const downloadCursor = document.getElementById('downloadCursor');
-
-        // Placeholder for processed images
-        totemImage.src = "https://example.com/totem_example.png";
-        cursorImage.src = "https://example.com/cursor_example.png";
-        downloadTotem.href = totemImage.src;
-        downloadCursor.href = cursorImage.src;
-
-        outputSection.style.display = "block";
-    }
-</script>
-
+            const img = new Image();
+            img.src = skinViewer.skin;
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                const a = document.createElement('a');
+                a.href = canvas.toDataURL();
+                a.download = 'totem_skin.png';
+                a.click();
+            };
+        });
+    </script>
 </body>
 </html>
